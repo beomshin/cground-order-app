@@ -1,6 +1,7 @@
 package com.kr.cground.dto;
 
-import com.kr.cground.persistence.entity.ItemTb;
+import com.kr.cground.persistence.entity.OrderItemsEntity;
+import com.kr.cground.persistence.entity.OrdersEntity;
 import lombok.*;
 
 @Getter
@@ -10,21 +11,19 @@ import lombok.*;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ItemRequest {
 
-    private String name;
+    private String productName;
 
-    private Integer count;
+    private Integer quantity;
 
-    private Integer amount;
+    private Integer unitPrice;
 
-    private Integer price;
-
-    public ItemTb mapToEntity() {
-
-        return ItemTb.builder()
-                .name(name)
-                .count(count)
-                .amount(amount)
-                .price(price)
+    public OrderItemsEntity mapToEntity(OrdersEntity entity) {
+        return OrderItemsEntity.builder()
+                .productName(productName)
+                .quantity(quantity)
+                .unitPrice(unitPrice)
+                .totalPrice(unitPrice * quantity)
+                .orderId(entity)
                 .build();
     }
 }

@@ -4,14 +4,16 @@ import com.kr.cground.persistence.entity.common.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.DynamicInsert;
 
 @Getter
 @SuperBuilder
 @ToString(callSuper=true)
-@Entity(name = "item_tb")
+@Entity(name = "order_items")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
-public class ItemTb extends BaseEntity {
+@DynamicInsert
+public class OrderItemsEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,17 +22,18 @@ public class ItemTb extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
-    private OrderTb orderId;
+    private OrdersEntity orderId;
 
-    @Column(name = "name")
-    private String name;
+    @Column(name = "product_name")
+    private String productName;
 
-    @Column(name = "count")
-    private Integer count;
+    @Column(name = "quantity")
+    private Integer quantity;
 
-    @Column(name = "amount")
-    private Integer amount;
+    @Column(name = "unit_price")
+    private Integer unitPrice;
 
-    @Column(name = "price")
-    private Integer price;
+    @Column(name = "total_price")
+    private Integer totalPrice;
+
 }

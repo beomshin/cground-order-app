@@ -1,6 +1,6 @@
 package com.kr.cground.service;
 
-import com.kr.cground.persistence.entity.OrderTb;
+import com.kr.cground.persistence.entity.OrdersEntity;
 import com.kr.cground.persistence.repository.OrderRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,8 +16,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     @Transactional
-    public boolean addOrder(OrderTb orderTb) {
-        orderRepository.save(orderTb);
-        return false;
+    public OrdersEntity addOrder(OrdersEntity ordersEntity) {
+        return orderRepository.save(ordersEntity);
     }
 }

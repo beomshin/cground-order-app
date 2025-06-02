@@ -11,7 +11,16 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class OrderRequest {
 
-    private String buyer;
+    private String receiptNumber;
+
+    private Integer totalAmount;
+
+    private String userId;
+
+    private String currency;
+
+    private String memo;
     
     private List<ItemRequest> items;
+
 }

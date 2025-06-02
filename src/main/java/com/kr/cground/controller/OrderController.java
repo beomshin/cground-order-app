@@ -2,8 +2,9 @@ package com.kr.cground.controller;
 
 import com.kr.cground.dto.ItemRequest;
 import com.kr.cground.dto.OrderRequest;
-import com.kr.cground.persistence.entity.ItemTb;
-import com.kr.cground.persistence.entity.OrderTb;
+import com.kr.cground.persistence.entity.OrderItemsEntity;
+import com.kr.cground.persistence.entity.OrdersEntity;
+import com.kr.cground.persistence.entity.enums.OrderStatus;
 import com.kr.cground.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 @Slf4j
 @RestController
@@ -22,22 +25,27 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/cground/order")
-    public ResponseEntity<?> order(
+    public ResponseEntity<?> addOrder(
             @RequestBody OrderRequest request
     ) {
-
-        List<ItemTb> itemTbs = request.getItems().stream().map(ItemRequest::mapToEntity).toList();
-
-        Integer amount = itemTbs.stream().map(ItemTb::getAmount).reduce(0, Integer::sum);
-
-        OrderTb orderTb = OrderTb.builder()
-                .buyer(request.getBuyer())
-                .items(itemTbs)
-                .amount(amount)
+        OrdersEntity orders = OrdersEntity.builder()
+                .receiptNumber(request.getReceiptNumber())
+                .orderStatus(OrderStatus.CREATED)
+                .orderNumber(UUID.randomUUID().toString().replace("-", "").substring(0, 32))
+                .userId(request.getUserId())
+                .totalAmount(request.getTotalAmount())
                 .build();
 
-        boolean isSuccess = orderService.addOrder(orderTb);
+        List<OrderItemsEntity> orderItems = request.getItems().stream().map(it -> it.mapToEntity(orders)).toList();
 
-        return ResponseEntity.ok().build();
+        orders.setItems(orderItems);
+
+        OrdersEntity ordersEntity = orderService.addOrder(orders);
+
+        return ResponseEntity.ok(Map.of(
+                "orderNumber", ordersEntity.getOrderNumber(),
+                "resultCode", "0000",
+                "resultMsg", "주문성공"
+        ));
     }
 }

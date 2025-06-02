@@ -1,8 +1,8 @@
 package com.kr.cground.service;
 
-import com.kr.cground.persistence.entity.OrderTb;
+import com.kr.cground.persistence.entity.OrdersEntity;
 
 public interface OrderService {
 
-    boolean addOrder(OrderTb orderTb);
+    OrdersEntity addOrder(OrdersEntity ordersEntity);
 }

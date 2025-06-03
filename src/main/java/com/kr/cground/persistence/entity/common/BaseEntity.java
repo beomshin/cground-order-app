@@ -21,12 +21,12 @@ import java.sql.Timestamp;
 @DynamicInsert
 public class BaseEntity {
 
-    @Column(name = "reg_dt")
+    @Column(name = "created_at")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-    private Timestamp regDt; // 등록일
+    private Timestamp createdAt; // 등록일
 
-    @Column(name = "mod_dt")
+    @Column(name = "updated_at")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-    private Timestamp modDt; // 수정일
+    private Timestamp updatedAt; // 수정일
 
 }

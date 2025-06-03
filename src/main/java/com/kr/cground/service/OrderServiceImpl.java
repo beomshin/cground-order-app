@@ -30,6 +30,8 @@ public class OrderServiceImpl implements OrderService {
                 .userId(orderRequest.getUserId())
                 .storeId(orderRequest.getStoreId())
                 .totalAmount(orderRequest.getTotalAmount())
+                .currency(orderRequest.getCurrency())
+                .memo(orderRequest.getMemo())
                 .build();
 
         List<OrderItemsEntity> orderItems = orderRequest.getItems().stream().map(it -> it.mapToEntity(orders)).toList();
@@ -37,6 +39,11 @@ public class OrderServiceImpl implements OrderService {
         orders.setItems(orderItems);
 
         return orderRepository.save(orders);
+    }
+
+    @Override
+    public OrdersEntity getOrder(String orderNumber) {
+        return orderRepository.findByOrderNumber(orderNumber);
     }
 
 }

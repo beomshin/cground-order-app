@@ -2,6 +2,7 @@ package com.kr.cground.persistence.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kr.cground.persistence.entity.common.BaseEntity;
+import com.kr.cground.persistence.entity.converter.OrderStatusConverter;
 import com.kr.cground.persistence.entity.enums.OrderStatus;
 import jakarta.persistence.*;
 import lombok.*;
@@ -38,15 +39,16 @@ public class OrdersEntity extends BaseEntity {
     private String storeId;
 
     @Column(name = "order_status")
+    @Convert(converter = OrderStatusConverter.class)
     private OrderStatus orderStatus;
 
     @Column(name = "order_date")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-    private Timestamp orderDate; // 등록일
+    private Timestamp orderDate;
 
     @Column(name = "payment_date")
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
-    private Timestamp paymentDate; // 수정일
+    private Timestamp paymentDate;
 
     @Column(name = "total_amount")
     private Integer totalAmount;

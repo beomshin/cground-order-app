@@ -7,4 +7,5 @@ public interface OrderService {
 
     OrdersEntity addOrder(OrderRequest orderRequest);
 
+    OrdersEntity getOrder(String orderNumber);
 }

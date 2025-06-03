@@ -12,6 +12,6 @@ public enum OrderStatus {
     CANCELLED("CANCELLED"),
     ;
 
-
     private String code;
+
 }

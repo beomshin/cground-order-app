@@ -6,7 +6,7 @@ spring:
     name: cground-order-app
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://125.180.87.49:2206/cground_order
+    url: jdbc:mysql://192.168.123.111:3306/cground_order
     username: cground_order
     password: cground_order12!@
   profiles:

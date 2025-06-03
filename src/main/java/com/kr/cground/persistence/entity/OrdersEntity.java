@@ -34,6 +34,9 @@ public class OrdersEntity extends BaseEntity {
     @Column(name = "user_id")
     private String userId;
 
+    @Column(name = "store_id")
+    private String storeId;
+
     @Column(name = "order_status")
     private OrderStatus orderStatus;
 

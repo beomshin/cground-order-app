@@ -56,7 +56,7 @@ jobs:
     # Docker Image Build
     - name: Docker Build Image
       run: |
-        docker build -t ${{ env.DOCKER_HUB_REPO }} \ .
+        docker build -t ${{ env.DOCKER_HUB_REPO }} .
 
     # Docker Hub Login
     - name: Login to DockerHub

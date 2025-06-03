@@ -18,8 +18,8 @@ jobs:
 
     runs-on: ubuntu-latest
     env:
-      DOCKER_HUB_REPO: beomshinkim/cground
-      DOCKER_HUB_NAME: cground
+      DOCKER_HUB_REPO: cground
+      DOCKER_HUB_NAME: beomshinkim
       DOCKER_HUB_USER: beomshinkim
       DOCKER_HUB_PASSWORD: cground12!@
 

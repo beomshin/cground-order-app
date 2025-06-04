@@ -28,14 +28,20 @@ public class OrderController {
 
         OrdersEntity ordersEntity = null;
         try {
-            ordersEntity = orderService.addOrder(request);
+
+            if (orderService.isActiveStore(request.getStoreId())) {
+                ordersEntity = orderService.addOrder(request);
+            } else {
+                result = ResponseResult.NOT_EXIST_STORE;
+            }
+
         } catch (Exception e) {
             log.error("Exception occured", e);
             result = ResponseResult.FAIL_ORDER;
         }
 
         return ResponseEntity.ok(Map.of(
-                "orderNumber", ordersEntity.getOrderNumber(),
+                "orderNumber", ordersEntity == null ? "" : ordersEntity.getOrderNumber(),
                 "resultCode", result.getCode(),
                 "resultMsg", result.getMessage()
         ));

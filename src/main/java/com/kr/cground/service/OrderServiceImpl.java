@@ -4,7 +4,9 @@ import com.kr.cground.dto.OrderRequest;
 import com.kr.cground.persistence.entity.OrderItemsEntity;
 import com.kr.cground.persistence.entity.OrdersEntity;
 import com.kr.cground.persistence.entity.enums.OrderStatus;
+import com.kr.cground.persistence.entity.enums.StoreStatus;
 import com.kr.cground.persistence.repository.OrderRepository;
+import com.kr.cground.persistence.repository.StoreOrderStatusRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +21,12 @@ import java.util.UUID;
 public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
+    private final StoreOrderStatusRepository storeOrderStatusRepository;
+
+    @Override
+    public boolean isActiveStore(String store_id) {
+        return storeOrderStatusRepository.findByStoreIdAndIsActive(store_id, StoreStatus.ACTIVE).isPresent();
+    }
 
     @Override
     @Transactional
@@ -34,9 +42,13 @@ public class OrderServiceImpl implements OrderService {
                 .memo(orderRequest.getMemo())
                 .build();
 
-        List<OrderItemsEntity> orderItems = orderRequest.getItems().stream().map(it -> it.mapToEntity(orders)).toList();
+        var orderItems = orderRequest.getItems().stream().map(it -> it.mapToEntity(orders)).toList();
 
         orders.setItems(orderItems);
+
+        var storeOrderStatus = storeOrderStatusRepository.findById(orderRequest.getStoreId()).orElse(null);
+
+        storeOrderStatus.addOrder();
 
         return orderRepository.save(orders);
     }

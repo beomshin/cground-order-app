@@ -2,6 +2,7 @@ package com.kr.cground.order;
 
 import com.kr.cground.dto.ItemRequest;
 import com.kr.cground.dto.OrderRequest;
+import com.kr.cground.exception.OrderException;
 import com.kr.cground.persistence.entity.StoreOrderStatusEntity;
 import com.kr.cground.persistence.repository.StoreOrderStatusRepository;
 import com.kr.cground.service.OrderService;
@@ -19,6 +20,7 @@ import java.util.UUID;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -40,6 +42,7 @@ public class ConcurrencyControlTest {
     void 동시에_재고_감소_요청을_보내면_정상적으로_처리되어야_한다() throws InterruptedException {
         ExecutorService executorService = Executors.newFixedThreadPool(THREAD_COUNT);
         CountDownLatch latch = new CountDownLatch(THREAD_COUNT);
+        AtomicInteger count = new AtomicInteger();
 
         OrderRequest request = OrderRequest.builder()
                 .storeId("ghHotel")
@@ -68,8 +71,9 @@ public class ConcurrencyControlTest {
         for (int i = 0; i < THREAD_COUNT; i++) {
             executorService.submit(() -> {
                 try {
+                    count.getAndIncrement();
                     orderService.addOrder(request);
-                } finally {
+                } catch (OrderException e) {} finally {
                     latch.countDown();
                 }
             });
@@ -81,7 +85,7 @@ public class ConcurrencyControlTest {
 
         if (entity.isPresent()) {
             int remainingStock = entity.get().getOrderCount();
-            log.info("동시성 제어 개수 : {}", remainingStock);
+            log.info("동시성 제어 개수 : {} / {}", remainingStock ,count.get());
             assert 90 != remainingStock;
         }
     }

@@ -12,6 +12,7 @@ public enum ResponseResult {
     FAIL_FIND_ORDER("4002", "주문조회실패"),
     NOT_EXIST_ORDER("4003", "미등록주문"),
     NOT_EXIST_STORE("4004", "미등록상점"),
+    NOT_EXIST_STOCK("4005", "재고 부족"),
     BAD_PARAM("3001", "파라미터 오류")
 
     ;

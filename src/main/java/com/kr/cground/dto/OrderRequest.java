@@ -34,4 +34,5 @@ public class OrderRequest {
     @Size(min = 1, message = "주문정보가 누락되었습니다.")
     private List<ItemRequest> items;
 
+
 }

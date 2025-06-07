@@ -13,6 +13,8 @@ public class ItemRequest {
 
     private String productName;
 
+    private String itemId;
+
     private Integer quantity;
 
     private Integer unitPrice;
@@ -26,4 +28,5 @@ public class ItemRequest {
                 .orderId(entity)
                 .build();
     }
+
 }

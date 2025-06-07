@@ -3,6 +3,7 @@ package com.kr.cground.controller;
 import com.kr.cground.constants.ResponseResult;
 import com.kr.cground.dto.OrderRequest;
 import com.kr.cground.dto.OrderResponse;
+import com.kr.cground.exception.OrderException;
 import com.kr.cground.persistence.entity.OrdersEntity;
 import com.kr.cground.service.OrderService;
 import jakarta.validation.Valid;
@@ -23,49 +24,28 @@ public class OrderController {
     @PostMapping("/cground/order")
     public ResponseEntity<?> addOrder(
             @Valid  @RequestBody OrderRequest request
-    ) {
-        ResponseResult result = ResponseResult.SUCESS;
+    ) throws OrderException {
+        var result = ResponseResult.SUCESS;
 
-        OrdersEntity ordersEntity = null;
-        try {
-
-            if (orderService.isActiveStore(request.getStoreId())) {
-                ordersEntity = orderService.addOrder(request);
-            } else {
-                result = ResponseResult.NOT_EXIST_STORE;
-            }
-
-        } catch (Exception e) {
-            log.error("Exception occured", e);
-            result = ResponseResult.FAIL_ORDER;
-        }
+        var ordersEntity = orderService.addOrder(request);
 
         return ResponseEntity.ok(Map.of(
-                "orderNumber", ordersEntity == null ? "" : ordersEntity.getOrderNumber(),
+                "orderNumber", ordersEntity.getOrderNumber(),
                 "resultCode", result.getCode(),
                 "resultMsg", result.getMessage()
         ));
     }
 
     @GetMapping("/cground/order/{orderNumber}")
-    public ResponseEntity<?> getOrder(@PathVariable String orderNumber) {
-        ResponseResult result = ResponseResult.SUCESS;
+    public ResponseEntity<?> getOrder(@PathVariable String orderNumber) throws OrderException {
+        var result = ResponseResult.SUCESS;
 
-        OrdersEntity ordersEntity = null;
-        try {
-            ordersEntity = orderService.getOrder(orderNumber);
-            if (ordersEntity == null) {
-                result = ResponseResult.NOT_EXIST_ORDER;
-            }
-        } catch (Exception e) {
-            log.error("Exception occured", e);
-            result = ResponseResult.FAIL_FIND_ORDER;
-        }
+        var ordersEntity = orderService.getOrder(orderNumber);
 
         return ResponseEntity.ok(Map.of(
                 "resultCode", result.getCode(),
                 "resultMsg", result.getMessage(),
-                "order", ordersEntity == null ? "" : OrderResponse.from(ordersEntity)
+                "order", OrderResponse.from(ordersEntity)
         ));
     }
 }

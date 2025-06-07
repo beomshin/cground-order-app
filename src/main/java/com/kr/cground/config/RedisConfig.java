@@ -1,11 +1,13 @@
 package com.kr.cground.config;
 
+import com.kr.cground.listener.KeyExpiredListener;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.listener.RedisMessageListenerContainer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
 @Slf4j
@@ -23,4 +25,15 @@ public class RedisConfig {
         return redisTemplate;
     }
 
+    @Bean
+    public RedisMessageListenerContainer RedisMessageListenerContainer(RedisConnectionFactory factory) {
+        RedisMessageListenerContainer container = new RedisMessageListenerContainer();
+        container.setConnectionFactory(factory);
+        return container;
+    }
+
+    @Bean
+    public KeyExpiredListener keyExpiredListener(RedisMessageListenerContainer RedisMessageListenerContainer) {
+        return new KeyExpiredListener(RedisMessageListenerContainer);
+    }
 }

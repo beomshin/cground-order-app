@@ -1,5 +1,6 @@
 package com.kr.cground.service;
 
+import com.kr.cground.constants.RedisKeys;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisCallback;
@@ -14,15 +15,13 @@ import java.util.concurrent.TimeUnit;
 public class StockServiceImpl implements StockService {
 
     private final RedisTemplate<String, String> redisTemplate;
-    private static final String STOCK_KEY = "stock:%s"; // 제품 재고 개수 관리
-    private static final String LOCK_KEY = "lock:%s"; // 예약 개수 관리
-    private static final long TTL_SECONDS = 10; // 재고 예약 TTL 5분
+    private static final long TTL_SECONDS = 5; // 재고 예약 TTL 5분
 
 
     @Override
     public boolean reserveStock(String productId, int quantity, String orderNumber) {
-        String key = String.format(STOCK_KEY, productId);
-        String lockKey = String.format(LOCK_KEY, productId + ":" + orderNumber);
+        String key = String.format(RedisKeys.STOCK_KEY.getKey(), productId);
+        String lockKey = String.format(RedisKeys.LOCK_KEY.getKey(), productId + ":" + quantity + ":" + orderNumber);
 
         return Boolean.TRUE.equals(redisTemplate.execute((RedisCallback<Boolean>) conn -> {
             conn.multi();
@@ -49,8 +48,8 @@ public class StockServiceImpl implements StockService {
      */
     @Override
     public void releaseStock(String productId, String userId) {
-        String lockKey = String.format(LOCK_KEY, productId + ":" + userId);
-        String stockKey = String.format(STOCK_KEY, productId);
+        String lockKey = String.format(RedisKeys.LOCK_KEY.getKey(), productId + ":" + userId);
+        String stockKey = String.format(RedisKeys.STOCK_KEY.getKey(), productId);
 
         String reserved = redisTemplate.opsForValue().get(lockKey); // 예약키 조회
         if (reserved != null) {
@@ -66,7 +65,7 @@ public class StockServiceImpl implements StockService {
      */
     @Override
     public void confirmOrder(String productId, String userId) {
-        String lockKey = String.format(LOCK_KEY, productId + ":" + userId);
+        String lockKey = String.format(RedisKeys.LOCK_KEY.getKey(), productId + ":" + userId);
         redisTemplate.delete(lockKey); // 재고 확정, 임시예약 삭제
     }
 

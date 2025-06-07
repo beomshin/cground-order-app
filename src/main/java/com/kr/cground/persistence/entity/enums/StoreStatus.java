@@ -12,7 +12,7 @@ public enum StoreStatus {
 
     ;
 
-    private int code;
+    private final int code;
 
     public static StoreStatus fromCode(int code) {
         for (StoreStatus s : StoreStatus.values()) {

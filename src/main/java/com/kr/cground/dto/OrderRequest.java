@@ -30,6 +30,8 @@ public class OrderRequest {
 
     private String memo;
 
+    private Integer stockFlag = 0;
+
     @NotNull(message = "주문정보가 누락되었습니다.")
     @Size(min = 1, message = "주문정보가 누락되었습니다.")
     private List<ItemRequest> items;

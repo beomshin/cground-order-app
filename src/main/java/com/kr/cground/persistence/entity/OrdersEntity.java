@@ -3,7 +3,9 @@ package com.kr.cground.persistence.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kr.cground.persistence.entity.common.BaseEntity;
 import com.kr.cground.persistence.entity.converter.OrderStatusConverter;
+import com.kr.cground.persistence.entity.converter.UseStatusConverter;
 import com.kr.cground.persistence.entity.enums.OrderStatus;
+import com.kr.cground.persistence.entity.enums.UseStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -52,6 +54,10 @@ public class OrdersEntity extends BaseEntity {
 
     @Column(name = "total_amount")
     private Integer totalAmount;
+
+    @Column(name = "stock_flag")
+    @Convert(converter = UseStatusConverter.class)
+    private UseStatus stockFlag;
 
     @Column(name = "currency")
     private String currency;

@@ -1,5 +1,6 @@
 package com.kr.cground.listener;
 
+import com.kr.cground.constants.RedisKeys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
@@ -21,8 +22,15 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
     public void onMessage(Message message, byte[] pattern) {
         String expiredKey = new String(message.getBody());
 
-        log.info("{}", expiredKey);
-        String quantityStr = redisTemplate.opsForValue().get(expiredKey); // null일 수 있음
-        log.info("{}", quantityStr);
+        if (expiredKey.contains("lock")) {
+            String[] keys = expiredKey.split(":");
+            String storeId = keys[1];
+            String itemNumber = keys[2];
+            String quantity = keys[3];
+
+            String key = String.format(RedisKeys.STOCK_KEY.getKey(), storeId + ":" + itemNumber);
+            redisTemplate.opsForValue().increment(key, Integer.parseInt(quantity));
+        }
+
     }
 }

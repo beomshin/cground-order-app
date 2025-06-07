@@ -7,7 +7,7 @@ import com.kr.cground.persistence.entity.OrdersEntity;
 import com.kr.cground.persistence.entity.enums.OrderStatus;
 import com.kr.cground.persistence.entity.enums.StoreStatus;
 import com.kr.cground.persistence.repository.OrderRepository;
-import com.kr.cground.persistence.repository.StoreOrderStatusRepository;
+import com.kr.cground.persistence.repository.StoresRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,27 +22,27 @@ public class OrderServiceImpl implements OrderService {
 
     private final OrderRepository orderRepository;
     private final StockService stockService;
-    private final StoreOrderStatusRepository storeOrderStatusRepository;
+    private final StoresRepository storesRepository;
 
     @Override
     @Transactional
     public OrdersEntity addOrder(OrderRequest orderRequest) throws OrderException {
-        var storeOrderStatusEntity = storeOrderStatusRepository.findByStoreIdAndIsActive(orderRequest.getStoreId(), StoreStatus.ACTIVE);
+        var storesEntity = storesRepository.findByStoreIdAndIsActive(orderRequest.getStoreId(), StoreStatus.ACTIVE);
 
-        if (storeOrderStatusEntity.isEmpty()) {
+        if (storesEntity.isEmpty()) {
             throw new OrderException(ResponseResult.NOT_EXIST_STORE);
         }
 
         var orderNumber= UUID.randomUUID().toString().replace("-", "").substring(0, 32);
 
-        var restock = orderRequest.getItems().stream()
-                .filter(it -> stockService.reserveStock(orderRequest.getStoreId() + ":" + it.getItemId(), it.getQuantity(), orderNumber))
-                .toList();
-
-        if (restock.size() != orderRequest.getItems().size()) {
-            restock.forEach(it -> stockService.releaseStock(orderRequest.getStoreId() + ":" + it.getItemId(), orderNumber));
-            throw new OrderException(ResponseResult.NOT_EXIST_STOCK);
-        }
+//        var restock = orderRequest.getItems().stream()
+//                .filter(it -> stockService.reserveStock(orderRequest.getStoreId() + ":" + it.getItemNumber(), it.getQuantity(), orderNumber))
+//                .toList();
+//
+//        if (restock.size() != orderRequest.getItems().size()) {
+//            restock.forEach(it -> stockService.releaseStock(orderRequest.getStoreId() + ":" + it.getItemNumber(), orderNumber));
+//            throw new OrderException(ResponseResult.NOT_EXIST_STOCK);
+//        }
 
         var orders = OrdersEntity.builder()
                 .receiptNumber(orderRequest.getReceiptNumber())
@@ -58,8 +58,7 @@ public class OrderServiceImpl implements OrderService {
         var orderItems = orderRequest.getItems().stream().map(it -> it.mapToEntity(orders)).toList();
         orders.setItems(orderItems);
 
-        storeOrderStatusEntity.get().addOrder();
-
+        storesEntity.get().addOrder();
 
         return orderRepository.save(orders);
     }

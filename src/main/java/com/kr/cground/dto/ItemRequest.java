@@ -1,5 +1,6 @@
 package com.kr.cground.dto;
 
+import com.kr.cground.persistence.entity.ItemsEntity;
 import com.kr.cground.persistence.entity.OrderItemsEntity;
 import com.kr.cground.persistence.entity.OrdersEntity;
 import lombok.*;
@@ -13,7 +14,7 @@ public class ItemRequest {
 
     private String productName;
 
-    private String itemId;
+    private String itemNumber;
 
     private Integer quantity;
 
@@ -22,6 +23,7 @@ public class ItemRequest {
     public OrderItemsEntity mapToEntity(OrdersEntity entity) {
         return OrderItemsEntity.builder()
                 .productName(productName)
+                .itemNumber(itemNumber)
                 .quantity(quantity)
                 .unitPrice(unitPrice)
                 .totalPrice(unitPrice * quantity)

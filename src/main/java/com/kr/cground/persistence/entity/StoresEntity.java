@@ -14,11 +14,11 @@ import java.sql.Timestamp;
 @Getter
 @SuperBuilder
 @ToString(callSuper=true)
-@Entity(name = "store_order_stats")
+@Entity(name = "stores")
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
 @DynamicInsert
-public class StoreOrderStatusEntity extends BaseEntity {
+public class StoresEntity extends BaseEntity {
 
     @Id
     @Column(name = "store_id")

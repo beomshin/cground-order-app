@@ -17,12 +17,15 @@ public class OrderItemsEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "item_id")
-    private Long itemId;
+    @Column(name = "order_item_id")
+    private Long orderItemId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id")
     private OrdersEntity orderId;
+
+    @Column(name = "item_number")
+    private String itemNumber;
 
     @Column(name = "product_name")
     private String productName;

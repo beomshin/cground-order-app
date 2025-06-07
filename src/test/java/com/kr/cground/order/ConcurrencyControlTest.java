@@ -3,8 +3,8 @@ package com.kr.cground.order;
 import com.kr.cground.dto.ItemRequest;
 import com.kr.cground.dto.OrderRequest;
 import com.kr.cground.exception.OrderException;
-import com.kr.cground.persistence.entity.StoreOrderStatusEntity;
-import com.kr.cground.persistence.repository.StoreOrderStatusRepository;
+import com.kr.cground.persistence.entity.StoresEntity;
+import com.kr.cground.persistence.repository.StoresRepository;
 import com.kr.cground.service.OrderService;
 import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
@@ -32,7 +32,7 @@ public class ConcurrencyControlTest {
     private OrderService orderService;
 
     @Autowired
-    private StoreOrderStatusRepository storeOrderStatusRepository;
+    private StoresRepository storesRepository;
 
 
     private final int THREAD_COUNT = 10;
@@ -81,7 +81,7 @@ public class ConcurrencyControlTest {
 
         latch.await(); // 모든 스레드가 종료될 때까지 대기
 
-        Optional<StoreOrderStatusEntity> entity =  storeOrderStatusRepository.findById(request.getStoreId());
+        Optional<StoresEntity> entity =  storesRepository.findById(request.getStoreId());
 
         if (entity.isPresent()) {
             int remainingStock = entity.get().getOrderCount();

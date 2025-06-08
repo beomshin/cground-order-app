@@ -29,7 +29,7 @@ public class OrderController {
 
         var ordersEntity = orderService.addOrder(request);
 
-        if (ordersEntity.getOrderStatus() != OrderStatus.FAIL) {
+        if (ordersEntity.getOrderStatus() == OrderStatus.FAIL) {
             result = ResponseResult.FAIL_ORDER;
         }
 

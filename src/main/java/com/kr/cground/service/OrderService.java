@@ -1,6 +1,6 @@
 package com.kr.cground.service;
 
-import com.kr.cground.dto.OrderRequest;
+import com.kr.cground.dto.request.OrderRequest;
 import com.kr.cground.exception.OrderException;
 import com.kr.cground.persistence.entity.OrdersEntity;
 

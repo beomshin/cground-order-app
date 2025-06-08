@@ -1,10 +1,9 @@
 package com.kr.cground.controller;
 
 import com.kr.cground.constants.ResponseResult;
-import com.kr.cground.dto.OrderRequest;
-import com.kr.cground.dto.OrderResponse;
+import com.kr.cground.dto.request.OrderRequest;
+import com.kr.cground.dto.response.OrderResponse;
 import com.kr.cground.exception.OrderException;
-import com.kr.cground.persistence.entity.OrdersEntity;
 import com.kr.cground.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -48,4 +47,6 @@ public class OrderController {
                 "order", OrderResponse.from(ordersEntity)
         ));
     }
+
+
 }

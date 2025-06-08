@@ -1,6 +1,5 @@
-package com.kr.cground.dto;
+package com.kr.cground.dto.request;
 
-import com.kr.cground.persistence.entity.ItemsEntity;
 import com.kr.cground.persistence.entity.OrderItemsEntity;
 import com.kr.cground.persistence.entity.OrdersEntity;
 import lombok.*;

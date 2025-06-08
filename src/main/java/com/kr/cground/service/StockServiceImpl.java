@@ -44,18 +44,19 @@ public class StockServiceImpl implements StockService {
     /**
      * 예약 종료
      * @param productId
-     * @param userId
+     * @param orderNumber
      */
     @Override
-    public void releaseStock(String productId, String userId) {
-        String lockKey = String.format(RedisKeys.LOCK_KEY.getKey(), productId + ":" + userId);
+    public void releaseStock(String productId, int quantity, String orderNumber) {
+        String lockKey = String.format(RedisKeys.LOCK_KEY.getKey(), productId + ":" + quantity + ":" + orderNumber);
         String stockKey = String.format(RedisKeys.STOCK_KEY.getKey(), productId);
 
         String reserved = redisTemplate.opsForValue().get(lockKey); // 예약키 조회
         if (reserved != null) {
-            redisTemplate.opsForValue().increment(stockKey, Long.parseLong(reserved)); // 완료하지않은 예약 종료로 재고 상승
             redisTemplate.delete(lockKey); // 키 삭제
+            redisTemplate.opsForValue().increment(stockKey, quantity); // 완료하지않은 예약 종료로 재고 상승
         }
+
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.kr.cground.listener;
 
 import com.kr.cground.constants.RedisKeys;
+import com.kr.cground.service.StockService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.connection.Message;
@@ -18,6 +19,9 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
     @Autowired
     private RedisTemplate<String, String> redisTemplate;
 
+    @Autowired
+    private StockService stockService;
+
     @Override
     public void onMessage(Message message, byte[] pattern) {
         String expiredKey = new String(message.getBody());
@@ -28,8 +32,8 @@ public class KeyExpiredListener extends KeyExpirationEventMessageListener {
             String itemNumber = keys[2];
             String quantity = keys[3];
 
-            String key = String.format(RedisKeys.STOCK_KEY.getKey(), storeId + ":" + itemNumber);
-            redisTemplate.opsForValue().increment(key, Integer.parseInt(quantity));
+            String stockKey = String.format(RedisKeys.STOCK_KEY.getKey(), storeId + ":" + itemNumber);
+            redisTemplate.opsForValue().increment(stockKey, Integer.parseInt(quantity)); // 완료하지않은 예약 종료로 재고 상승
         }
 
     }

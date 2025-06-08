@@ -1,7 +1,7 @@
 package com.kr.cground.service;
 
 import com.kr.cground.constants.ResponseResult;
-import com.kr.cground.dto.OrderRequest;
+import com.kr.cground.dto.request.OrderRequest;
 import com.kr.cground.exception.OrderException;
 import com.kr.cground.persistence.entity.OrdersEntity;
 import com.kr.cground.persistence.entity.enums.OrderStatus;
@@ -43,7 +43,7 @@ public class OrderServiceImpl implements OrderService {
                     .toList();
 
             if (restock.size() != orderRequest.getItems().size()) {
-                restock.forEach(it -> stockService.releaseStock(orderRequest.getStoreId() + ":" + it.getItemNumber(), orderNumber));
+                restock.forEach(it -> stockService.releaseStock(orderRequest.getStoreId() + ":" + it.getItemNumber(), it.getQuantity(), orderNumber));
                 throw new OrderException(ResponseResult.NOT_EXIST_STOCK);
             }
 

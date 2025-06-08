@@ -1,4 +1,4 @@
-package com.kr.cground.dto;
+package com.kr.cground.dto.response;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.kr.cground.persistence.entity.OrdersEntity;
@@ -43,6 +43,7 @@ public class OrderResponse {
     @AllArgsConstructor
     @NoArgsConstructor(access = AccessLevel.PRIVATE)
     private static class ItemResponse {
+        private String itemNumber;
         private String productName;
         private Integer quantity;
         private Integer unitPrice;
@@ -53,6 +54,7 @@ public class OrderResponse {
     public static OrderResponse from(OrdersEntity ordersEntity) {
         List<ItemResponse> items = ordersEntity.getItems().stream().map(
                 it -> ItemResponse.builder()
+                        .itemNumber(it.getItemNumber())
                         .productName(it.getProductName())
                         .quantity(it.getQuantity())
                         .unitPrice(it.getUnitPrice())

@@ -13,10 +13,11 @@ public enum ResponseResult {
     NOT_EXIST_ORDER("4003", "미등록주문"),
     NOT_EXIST_STORE("4004", "미등록상점"),
     NOT_EXIST_STOCK("4005", "재고 부족"),
-    BAD_PARAM("3001", "파라미터 오류")
+    BAD_PARAM("3001", "파라미터 오류"),
+    FAIL_REQUEST("3000", "서버 시스템 오류")
 
     ;
 
-    private String code;
-    private String message;
+    private final String code;
+    private final String message;
 }

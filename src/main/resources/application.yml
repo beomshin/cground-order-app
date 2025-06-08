@@ -11,6 +11,15 @@ spring:
     password: cground_order12!@
   profiles:
     active: local
+    group:
+      local:
+        - console-logging
+      test:
+        - console-logging
+        - file-logging
+      prod:
+        - console-logging
+        - file-logging
   thymeleaf:
     cache: false
 

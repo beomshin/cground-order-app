@@ -15,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 public class StockServiceImpl implements StockService {
 
     private final RedisTemplate<String, String> redisTemplate;
-    private static final long TTL_SECONDS = 5; // 재고 예약 TTL 5분
+    private static final long TTL_SECONDS = 300; // 재고 예약 TTL 5분
 
 
     @Override
@@ -65,8 +65,8 @@ public class StockServiceImpl implements StockService {
      * @param userId
      */
     @Override
-    public void confirmOrder(String productId, String userId) {
-        String lockKey = String.format(RedisKeys.LOCK_KEY.getKey(), productId + ":" + userId);
+    public void confirmOrder(String productId, int quantity, String orderNumber) {
+        String lockKey = String.format(RedisKeys.LOCK_KEY.getKey(), productId + ":" + quantity + ":" + orderNumber);
         redisTemplate.delete(lockKey); // 재고 확정, 임시예약 삭제
     }
 

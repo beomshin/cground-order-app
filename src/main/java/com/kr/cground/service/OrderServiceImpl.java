@@ -1,10 +1,13 @@
 package com.kr.cground.service;
 
 import com.kr.cground.constants.ResponseResult;
+import com.kr.cground.dto.payment.PaymentRequest;
+import com.kr.cground.dto.payment.PaymentResponse;
 import com.kr.cground.dto.request.OrderRequest;
 import com.kr.cground.exception.OrderException;
 import com.kr.cground.persistence.entity.OrdersEntity;
 import com.kr.cground.persistence.entity.enums.OrderStatus;
+import com.kr.cground.persistence.entity.enums.PaymentStatus;
 import com.kr.cground.persistence.entity.enums.StoreStatus;
 import com.kr.cground.persistence.entity.enums.UseStatus;
 import com.kr.cground.persistence.repository.OrderRepository;
@@ -14,6 +17,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
+import java.util.Date;
+import java.util.Optional;
 import java.util.UUID;
 
 @Slf4j
@@ -24,6 +30,7 @@ public class OrderServiceImpl implements OrderService {
     private final OrderRepository orderRepository;
     private final StockService stockService;
     private final StoresRepository storesRepository;
+    private final PaymentService paymentService;
 
     @Override
     @Transactional
@@ -60,12 +67,31 @@ public class OrderServiceImpl implements OrderService {
                 .currency(orderRequest.getCurrency())
                 .stockFlag(UseStatus.fromCode(orderRequest.getStockFlag()))
                 .memo(orderRequest.getMemo())
+                .orderDate(new Timestamp(new Date().getTime()))
                 .build();
 
         var orderItems = orderRequest.getItems().stream().map(it -> it.mapToEntity(orders)).toList();
         orders.setItems(orderItems);
 
         storesRepository.updateOrderCount(orders.getStoreId());
+
+        var response = paymentService.addPayment(PaymentRequest.builder()
+                        .orderNumber(orderNumber)
+                        .amount(orders.getTotalAmount())
+                        .userId(orders.getUserId())
+                .build());
+
+        orders.setPaymentData(response);
+
+        if (UseStatus.ON == UseStatus.fromCode(orderRequest.getStockFlag())) {
+
+            if (orders.getPaymentStatus() == PaymentStatus.SUCCESS) {
+                orderRequest.getItems().forEach(it -> stockService.confirmOrder(orderRequest.getStoreId() + ":" + it.getItemNumber(), it.getQuantity(), orderNumber));
+            } else {
+                orderRequest.getItems().forEach(it -> stockService.releaseStock(orderRequest.getStoreId() + ":" + it.getItemNumber(), it.getQuantity(), orderNumber));
+            }
+
+        }
 
         log.info("주문 등록 종료");
         return orderRepository.save(orders);

@@ -6,5 +6,5 @@ public interface StockService {
 
     void releaseStock(String productId, int quantity, String orderNumber);
 
-    void confirmOrder(String productId, String userId);
+    void confirmOrder(String productId, int quantity, String orderNumber);
 }

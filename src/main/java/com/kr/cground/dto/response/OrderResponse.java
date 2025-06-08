@@ -21,7 +21,11 @@ public class OrderResponse {
 
     private String storeId;
 
+    private String transcationId;
+
     private String orderStatus;
+
+    private String paymentStatus;
 
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private Timestamp orderDate;
@@ -67,7 +71,9 @@ public class OrderResponse {
                 .orderNumber(ordersEntity.getOrderNumber())
                 .userId(ordersEntity.getUserId())
                 .storeId(ordersEntity.getStoreId())
+                .transcationId(ordersEntity.getTranscationId())
                 .orderStatus(ordersEntity.getOrderStatus().getCode())
+                .paymentStatus(ordersEntity.getPaymentStatus().getCode())
                 .orderDate(ordersEntity.getOrderDate())
                 .paymentDate(ordersEntity.getPaymentDate())
                 .totalAmount(ordersEntity.getTotalAmount())

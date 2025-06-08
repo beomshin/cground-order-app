@@ -35,3 +35,6 @@ spring:
       host: 192.168.123.110
       port: 6379
       password: cground12!@
+
+payment:
+  url: http://192.168.123.103:9821/cground/payment

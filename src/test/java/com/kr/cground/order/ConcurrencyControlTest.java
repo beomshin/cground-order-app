@@ -45,10 +45,11 @@ public class ConcurrencyControlTest {
         AtomicInteger count = new AtomicInteger();
 
         OrderRequest request = OrderRequest.builder()
-                .storeId("ghHotel")
+                .storeId("cground")
                 .receiptNumber(UUID.randomUUID().toString().replace("-","").substring(0, 16))
                 .userId("테스트유저")
                 .totalAmount(4000)
+                .stockFlag(0)
                 .items(Arrays.asList(
                         ItemRequest.builder()
                                 .productName("상품1")
@@ -73,7 +74,9 @@ public class ConcurrencyControlTest {
                 try {
                     count.getAndIncrement();
                     orderService.addOrder(request);
-                } catch (OrderException e) {} finally {
+                } catch (Exception e) {
+                    log.error(e.getMessage());
+                } finally {
                     latch.countDown();
                 }
             });

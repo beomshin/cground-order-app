@@ -38,8 +38,4 @@ public class StoresEntity extends BaseEntity {
     @JsonFormat(shape= JsonFormat.Shape.STRING, pattern="yyyy-MM-dd HH:mm:ss")
     private Timestamp lastOrderedAt;
 
-    public void addOrder() {
-        this.orderCount++;
-    }
-
 }

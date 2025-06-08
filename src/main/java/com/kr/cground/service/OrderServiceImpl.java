@@ -28,6 +28,7 @@ public class OrderServiceImpl implements OrderService {
     @Override
     @Transactional
     public OrdersEntity addOrder(OrderRequest orderRequest) throws OrderException {
+        log.info("주문 등록 시작");
         var storesEntity = storesRepository.findByStoreIdAndIsActive(orderRequest.getStoreId(), StoreStatus.ACTIVE);
 
         if (storesEntity.isEmpty() || storesEntity.get().getIsActive() == StoreStatus.NON_ACTIVE) {
@@ -64,8 +65,9 @@ public class OrderServiceImpl implements OrderService {
         var orderItems = orderRequest.getItems().stream().map(it -> it.mapToEntity(orders)).toList();
         orders.setItems(orderItems);
 
-        storesEntity.get().addOrder();
+        storesRepository.updateOrderCount(orders.getStoreId());
 
+        log.info("주문 등록 종료");
         return orderRepository.save(orders);
     }
 

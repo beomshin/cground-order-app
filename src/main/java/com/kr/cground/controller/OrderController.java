@@ -4,7 +4,7 @@ import com.kr.cground.constants.ResponseResult;
 import com.kr.cground.dto.request.OrderRequest;
 import com.kr.cground.dto.response.OrderResponse;
 import com.kr.cground.exception.OrderException;
-import com.kr.cground.persistence.entity.enums.PaymentStatus;
+import com.kr.cground.persistence.entity.enums.OrderStatus;
 import com.kr.cground.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +29,8 @@ public class OrderController {
 
         var ordersEntity = orderService.addOrder(request);
 
-        if (ordersEntity.getPaymentStatus() != PaymentStatus.SUCCESS) {
-            result = ResponseResult.FAIL_FIND_PAYMENT;
+        if (ordersEntity.getOrderStatus() != OrderStatus.FAIL) {
+            result = ResponseResult.FAIL_ORDER;
         }
 
         return ResponseEntity.ok(Map.of(

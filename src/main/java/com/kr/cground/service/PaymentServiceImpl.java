@@ -32,7 +32,7 @@ public class PaymentServiceImpl implements PaymentService {
             ResponseEntity<PaymentResponse> response = restTemplate.postForEntity(paymentUrl, request, PaymentResponse.class);
 
             if (response.getStatusCode() == HttpStatus.OK) {
-                return Optional.of(response.getBody());
+                return Optional.ofNullable(response.getBody());
             } else {
                 return Optional.empty();
             }

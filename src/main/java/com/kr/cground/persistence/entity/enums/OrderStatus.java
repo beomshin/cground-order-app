@@ -9,7 +9,7 @@ public enum OrderStatus {
 
     CREATED("CREATED"),
     PAID("PAID"),
-    CANCELLED("CANCELLED"),
+    FAIL("FAIL"),
     ;
 
     private final String code;

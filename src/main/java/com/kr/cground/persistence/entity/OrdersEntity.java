@@ -108,8 +108,10 @@ public class OrdersEntity extends BaseEntity {
 
         if (response.get().getResultCode().equals(ResponseResult.SUCESS.getCode())){
             this.paymentStatus = PaymentStatus.SUCCESS;
+            this.orderStatus = OrderStatus.PAID;
         } else {
             this.paymentStatus = PaymentStatus.FAILED;
+            this.orderStatus = OrderStatus.FAIL;
         }
 
 

@@ -84,13 +84,11 @@ public class OrderServiceImpl implements OrderService {
         orders.setPaymentData(response);
 
         if (UseStatus.ON == UseStatus.fromCode(orderRequest.getStockFlag())) {
-
             if (orders.getPaymentStatus() == PaymentStatus.SUCCESS) {
                 orderRequest.getItems().forEach(it -> stockService.confirmOrder(orderRequest.getStoreId() + ":" + it.getItemNumber(), it.getQuantity(), orderNumber));
             } else {
                 orderRequest.getItems().forEach(it -> stockService.releaseStock(orderRequest.getStoreId() + ":" + it.getItemNumber(), it.getQuantity(), orderNumber));
             }
-
         }
 
         log.info("주문 등록 종료");
